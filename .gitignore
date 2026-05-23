@@ -1,0 +1,54 @@
+# Source code MUST NEVER land in this download-mirror repository.
+# This .gitignore is the first defense layer (the GitHub Action
+# .github/workflows/no-source-code.yml is the second).
+
+# C# / .NET
+*.cs
+*.csproj
+*.sln
+*.xaml
+*.xaml.cs
+*.props
+*.targets
+
+# Go
+*.go
+go.mod
+go.sum
+
+# Native / lower-level
+*.h
+*.hpp
+*.c
+*.cpp
+*.cs
+
+# Other languages
+*.py
+*.js
+*.ts
+*.jsx
+*.tsx
+*.rb
+*.java
+*.kt
+*.swift
+*.rs
+*.php
+*.pl
+*.sh
+*.ps1
+*.psm1
+*.sql
+
+# Build / IDE artifacts
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+
+# Local cruft
+.DS_Store
+Thumbs.db
