@@ -1,15 +1,4 @@
-# Source-Code-Guard
-#
-# Dieses Repo ist der oeffentliche Download-Spiegel fuer WAWITranslator-
-# Setup-Dateien. Der Quellcode liegt in PRIVATEN Repos (stfalk/WTS.Gui,
-# /c/wawi-translator). Hier darf NIEMALS Source-Code landen.
-#
-# Diese Action laeuft bei jedem Push und PR auf main. Wenn Dateien mit
-# verbotenen Extensions im Tree sind, schlaegt der Job fehl und das
-# Repo zeigt ein rotes ✗ neben dem Commit – als sofort sichtbares
-# Warnsignal. Mit aktivierter Branch Protection (s. README) blockiert
-# der fehlschlagende Check sogar den Push selbst.
-name: source-code-guard
+name: guard
 
 on:
   push:
@@ -22,32 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Scan tracked files for source-code extensions
+      - name: Check tracked files
         run: |
-          # Verbotene Extensions. Falls Du dieses Repo bewusst um eine
-          # erlaubte Datei erweiterst (z. B. RELEASE-NOTES.md), Liste
-          # unten in der Allowlist ergaenzen, nicht den Check abschwaechen.
           FORBIDDEN_REGEX='\.(cs|csproj|sln|xaml|props|targets|go|mod|sum|h|hpp|c|cpp|py|js|ts|jsx|tsx|rb|java|kt|swift|rs|php|pl|sh|ps1|psm1|sql)$'
-
           OFFENDERS=$(git ls-files | grep -iE "$FORBIDDEN_REGEX" || true)
-
           if [ -n "$OFFENDERS" ]; then
-            echo "::error::Source-code files detected in this download-mirror repo."
-            echo "::error::Dieses Repo darf NUR Setup-EXE-Assets + README/Docs enthalten."
-            echo ""
-            echo "Gefundene Datei(en):"
+            echo "::error::Unexpected file types detected:"
             echo "$OFFENDERS"
-            echo ""
-            echo "Falls eine dieser Dateien hier legitim ist, die FORBIDDEN_REGEX im Workflow anpassen."
-            echo "Falls die Datei versehentlich gepusht wurde:"
-            echo "  1) lokal: git rm --cached <pfad>"
-            echo "  2) commit + push (Force-Push noetig, weil History bereinigt werden muss)"
             exit 1
           fi
-          echo "✓ Keine Source-Code-Dateien im Tree."
-
-      - name: Verify tracked file list looks sane
-        run: |
-          echo "Tracked files:"
-          git ls-files | sort
+          echo "OK"
